@@ -1,69 +1,72 @@
-import { Table } from '@nextui-org/react';
+import { Table, Container, Pagination } from '@nextui-org/react';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 
 const App = () => {
 
     const columns = [
         {
+            key: "sku",
+            label: "SKU",
+        },
+        {
             key: "name",
-            label: "NAME",
+            label: "Name",
         },
         {
-            key: "role",
-            label: "ROLE",
+            key: "quantity",
+            label: "Quantity",
         },
         {
-            key: "status",
-            label: "STATUS",
-        },
-    ];
-    const rows = [
-        {
-            key: "1",
-            name: "Tony Reichert",
-            role: "CEO",
-            status: "Active",
-        },
-        {
-            key: "2",
-            name: "Zoey Lang",
-            role: "Technical Lead",
-            status: "Paused",
-        },
-        {
-            key: "3",
-            name: "Jane Fisher",
-            role: "Senior Developer",
-            status: "Active",
-        },
-        {
-            key: "4",
-            name: "William Howard",
-            role: "Community Manager",
-            status: "Vacation",
+            key: "price",
+            label: "Price",
         },
     ];
 
+    const [rows, setRows] = useState([]);
+
+    useEffect(() => {
+        axios.get('/api/data').then((response) => {
+            let resData = JSON.parse(JSON.stringify(response.data));
+            let itemsArr = [];
+
+            resData.orders.forEach((f) => {
+                itemsArr.push(f.items[0])
+            })
+
+            setRows(itemsArr);
+
+        }).catch((error) => {
+            console.error(error);
+        });
+    }, []);
+
     return (
-        <Table
-            aria-label="Example table with dynamic content"
-            css={{
-                height: "auto",
-                minWidth: "100%",
-            }}
-        >
-            <Table.Header columns={columns}>
-                {(column) => (
-                    <Table.Column key={column.key}>{column.label}</Table.Column>
-                )}
-            </Table.Header>
-            <Table.Body items={rows}>
-                {(item) => (
-                    <Table.Row key={item.key}>
-                        {(columnKey) => <Table.Cell>{item[columnKey]}</Table.Cell>}
-                    </Table.Row>
-                )}
-            </Table.Body>
-        </Table>
+        <>
+            <Container xl css={{ maxWidth: "60%" }}>
+                <Table
+                    aria-label="Example table with dynamic content"
+                    css={{
+                        height: "auto",
+                    }}
+                >
+                    <Table.Header columns={columns}>
+                        {(column) => (
+                            <Table.Column key={column.key}>{column.label}</Table.Column>
+                        )}
+                    </Table.Header>
+                    <Table.Body items={rows}>
+                        {(item) => (
+                            <Table.Row key={item.key}>
+                                {(columnKey) => <Table.Cell>{item[columnKey]}</Table.Cell>}
+                            </Table.Row>
+                        )}
+                    </Table.Body>
+                </Table>
+                <Pagination total={5} initialPage={1} totalItems={rows.length} />
+            </Container>
+        </>
+
     );
 }
 
