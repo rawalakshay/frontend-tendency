@@ -171,7 +171,7 @@ const App = () => {
 
     return (
         <>
-            <Container xl css={{ maxWidth: "60%" }}>
+            <Container xl css={{ maxWidth: "90%" }}>
                 <div>
                     <Spacer y={0.5} />
                     <Button auto color="primary" onClick={openHandler}>
