@@ -45,6 +45,7 @@ const App = () => {
         <>
             <Container xl css={{ maxWidth: "60%" }}>
                 <Table
+                    bordered
                     aria-label="Example table with dynamic content"
                     css={{
                         height: "auto",
@@ -62,8 +63,15 @@ const App = () => {
                             </Table.Row>
                         )}
                     </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={5}
+                        onPageChange={(page) => console.log({ page })}
+                    />
                 </Table>
-                <Pagination total={5} initialPage={1} totalItems={rows.length} />
+                {/* <Pagination total={5} initialPage={1} totalItems={rows.length} /> */}
             </Container>
         </>
 
