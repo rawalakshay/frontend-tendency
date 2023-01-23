@@ -32,66 +32,55 @@ const App = () => {
     const [price, setPrice] = useState("");
     const [validForm, setValidForm] = useState(false);
 
+    const [newObj, setNewObj] = useState({});
+
     const closeHandler = () => {
         setVisible(false);
+        setValidForm(true);
     }
 
     const openHandler = () => {
         setVisible(true);
+        setValidForm(true);
     }
 
-    let nameVar, quantityVar, priceVar, skuVar;
-
     const setSkuFn = (event) => {
-        skuVar = event.target.value;
         setSku(event.target.value);
-        checkFormValidation();
     }
 
     const setNameFn = (event) => {
-        nameVar = event.target.value;
         setName(event.target.value);
-        checkFormValidation();
     }
 
     const setQuantityFn = (event) => {
-        quantityVar = event.target.value;
         setQuantity(event.target.value);
-        checkFormValidation();
     }
 
     const setPriceFn = (event) => {
-        priceVar = event.target.value;
         setPrice(event.target.value);
-        checkFormValidation();
     }
 
-    const addNewOrder = () => {
+    const checkFormValidation = useEffect(() => {
+        // console.log(`name :>>`, name, 'quantity :>>', quantity, 'price :>>', price, 'sku :>>', sku);
+        if (name == "") {
+            setValidForm(true);
+        }
+        if (quantity == "") {
+            setValidForm(true);
+        }
+        if (price == "") {
+            setValidForm(true);
+        }
         if (sku == "") {
-            console.log(`Empty SKU`);
-        }
-    }
-
-    const checkFormValidation = () => {
-        if (nameVar == "") {
-            setValidForm(true);
-        }
-        if (quantityVar == "") {
-            setValidForm(true);
-        }
-        if (priceVar == "") {
-            setValidForm(true);
-        }
-        if (skuVar == "") {
             setValidForm(true);
         }
 
-        if(nameVar != '' && quantityVar != '' && priceVar != '' && skuVar != '') {
+        if (name != '' && quantity != '' && price != '' && sku != '') {
             console.log('form is valid')
             setValidForm(false);
         }
 
-    }
+    }, [name, price, quantity, sku]);
 
     const skuHelper = React.useMemo(() => {
         if (sku == '')
@@ -157,13 +146,28 @@ const App = () => {
             resData.orders.forEach((f) => {
                 itemsArr.push(f.items[0])
             })
-
+            console.log(`newObj :>>`, newObj);
+            if(newObj.hasOwnProperty('name')){
+                itemsArr.unshift(newObj);
+            }
             setRows(itemsArr);
 
         }).catch((error) => {
             console.error(error);
         });
-    }, []);
+    }, [newObj]);
+
+    const addNewOrder = () => {
+        let jsonObj = {
+            id: '11472548692839',
+            name: name,
+            quantity: quantity,
+            price: price,
+            sku: sku,
+        }
+        setNewObj(jsonObj);
+        setVisible(false);
+    }
 
     return (
         <>
